@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Services\KeyService;
+use App\Http\Services\SymmetricService;
 
 class SyncController extends Controller
 {
@@ -13,7 +15,10 @@ class SyncController extends Controller
      */
     public function index()
     {
-        //
+        $keyService = new KeyService();
+        $usersPaths = $keyService->listUserPaths();
+
+        return  view('sync.index')->with(['result' => '',  'resultChipher' => $resultChipher = '', 'usersPaths' => $usersPaths]);
     }
 
     /**
@@ -21,64 +26,56 @@ class SyncController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function encrypt(Request $request)
     {
-        //
+        $dados = request()->all();
+        $validate = [
+            'userEncrypt' => 'required',
+            'plaintext' => 'required',
+            'userEncrypt' => 'required',
+        ];
+
+        request()->validate($validate);
+        $sync = new SymmetricService();
+
+        /**
+         * feed the variable (this application is just a test).
+         */
+        $result = $sync->chipherSimetric($dados['plaintext'], $dados['userEncrypt']);
+        $keyService = new KeyService();
+        $usersPaths = $keyService->listUserPaths();
+
+        return  view('sync.index')->with(['result' => '',  'result' => $result, 'resultChipher' => $resultChipher = '', 'usersPaths' => $usersPaths]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
+     * @param \Illuminate\Http\Request $request
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function decrypt(Request $request)
     {
-        //
-    }
+        $dados = request()->all();
+        $validate = [
+            'userDecrypt' => 'required',
+            'ciphertext' => 'required',
+        ];
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+        request()->validate($validate);
+        $sync = new SymmetricService();
+        $resultChipher = $sync->dechipherSimetric($dados['ciphertext'], $dados['userDecrypt']);
+        /*
+         * feed the variable (this application is just a test).
+         */
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+        $keyService = new KeyService();
+        $usersPaths = $keyService->listUserPaths();
+        if (!$resultChipher) {
+            $request->session()->flash('alert-danger', 'Could not decrypt for user '.$dados['userDecrypt']);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return  view('sync.index')->with(['result' => '',  'result' => $result = '', 'resultChipher' => $resultChipher, 'usersPaths' => $usersPaths]);
     }
 }

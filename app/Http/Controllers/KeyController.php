@@ -14,15 +14,7 @@ class KeyController extends Controller
      */
     public function index()
     {
-        $code = highlight_string('<?php use phpseclib\Crypt\RSA;
-        $rsa = new RSA();
-        $rsa->setPrivateKeyFormat(RSA::PRIVATE_FORMAT_PKCS8);
-        $rsa->setPublicKeyFormat(RSA::PUBLIC_FORMAT_PKCS8);
-        $rsa->setMGFHash("sha512");
-        $keysCertificadoGerado = $rsa->createKey(2048);
-        //$keysCertificadoGerado["privatekey"=>"---chave privada----", "publickey"=>"---chave publica---"]');
-
-        return  view('key.index')->with('code', $code);
+        return  view('key.index');
     }
 
     /**

@@ -85,24 +85,10 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="{{route('key.index')}}">Generate Key</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
+        <a class="nav-link" href="{{route('symmetric.index')}}">Symmetric</a>
       </li>
     </ul>
     <form class="form-inline my-2 my-lg-0">
@@ -116,19 +102,39 @@
     <main role="main">
       <div class="album py-5 bg-light">
         <div class="container">
-          <div class="row">
-           <div class="flash-message">
-                    @foreach (['danger', 'warning', 'success', 'info'] as $msg)
-                        @if(Session::has('alert-' . $msg))
-                            <p class="alert alert-{{ $msg }}">{{ Session::get('alert-' . $msg) }} <a href="#"
-                                                                                                     class="close"
-                                                                                                     data-dismiss="alert"
-                                                                                                     aria-label="close">x</a>
-                            </p>
-                        @endif
-                    @endforeach
+            <div class="row"><h1 class="jumbotron-heading" style="padding-bottom: 20px;">@yield('title')</h1></div>
+            <div class="row">
+                    <div class="flash-message" style="width:100%">
+                            @foreach (['danger', 'warning', 'success', 'info'] as $msg)
+                                @if(Session::has('alert-' . $msg))
+                                    <p class="alert alert-{{ $msg }}">{{ Session::get('alert-' . $msg) }} <a href="#"
+                                                                                                             class="close"
+                                                                                                             data-dismiss="alert"
+                                                                                                             aria-label="close">x</a>
+                                    </p>
+                                @endif
+                            @endforeach
+                    </div>
             </div>
+          <div class="row">
+
             @yield('content')
+            <div id="accordion" class="col-12">
+                    <div class="card" style="width:100%">
+                      <div class="card-header" id="headingTwo">
+                        <h5 class="mb-0">
+                          <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Code snippet
+                          </button>
+                        </h5>
+                      </div>
+                      <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                        <div class="card-body">
+                                @yield('code')
+                        </div>
+                      </div>
+                    </div>
+                  </div>
           </div>
       </div>
 
@@ -136,7 +142,7 @@
 
     <footer class="text-muted">
       <div class="container">
-       
+
         <p>PHPSec Lib Exemple By <a href="https://github.com/mneresc">@mneresc</a></p>
       </div>
     </footer>
@@ -144,15 +150,15 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-        
+
     <script src="{{ asset('js/jquery.js') }}" defer></script>
     <script src="{{ asset('js/bootstrap/bootstrap.js') }}" defer></script>
-  
+
 
 <svg xmlns="http://www.w3.org/2000/svg" width="348" height="225" viewBox="0 0 348 225" preserveAspectRatio="none" style="display: none; visibility: hidden; position: absolute; top: -100%; left: -100%;"><defs><style type="text/css"></style></defs><text x="0" y="17" style="font-weight:bold;font-size:17pt;font-family:Arial, Helvetica, Open Sans, sans-serif">Thumbnail</text></svg><div id="shadowMeasureIt"></div><div id="divCoordMeasureIt"></div><div id="divRectangleMeasureIt"><div id="divRectangleBGMeasureIt"></div></div></body>
 <loom-container id="lo-engage-ext-container"><loom-shadow classname="resolved"></loom-shadow></loom-container></html>
-    
+
 {{-- <script src="{{ asset('js/jquery.js') }}" defer></script> --}}
 {{-- <script src="{{ asset('js/bootstrap/bootstrap.js') }}" defer></script> --}}
-  
+
 

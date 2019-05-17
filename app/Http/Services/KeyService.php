@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use phpseclib\Crypt\RSA;
+use Illuminate\Support\Facades\Storage;
 
 class KeyService
 {
@@ -47,8 +48,8 @@ class KeyService
         $path = "{$this->certsPath}/{$pastaUsuario}";
 
         $keys = [
-            'publicKey' => "$path/{$username}_public.pub",
-            'privateKey' => "$path/{$username}_private.key",
+            'publicKey' => "$path/{$username}.pub",
+            'privateKey' => "$path/{$username}.key",
             'path' => $path,
         ];
 
@@ -88,6 +89,26 @@ class KeyService
     }
 
     /**
+     * Lista as pastas dos usuarios que possuem chaves.
+     *
+     * @return array
+     */
+    public function listUserPaths(): array
+    {
+        $path = storage_path('keys');
+        if (\is_dir($path)) {
+            $directory = Storage::disk('local')->allDirectories($path);
+            $usersPaths = [];
+            foreach ($directory as $userPath) {
+                $pathSlices = explode('/', $userPath);
+                $usersPaths[] = end($pathSlices);
+            }
+        }
+
+        return $usersPaths;
+    }
+
+    /**
      * escreve no arquivo selecionado o conteudo.
      *
      * @param $caminho
@@ -98,5 +119,6 @@ class KeyService
         $fp = fopen($path, 'wb');
         fwrite($fp, $content);
         fclose($fp);
+        \chmod($path, 0750);
     }
 }
