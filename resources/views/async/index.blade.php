@@ -1,12 +1,12 @@
 @extends('layouts.default')
 @section('title')
-   Symmetric
+   Assymmetric
 @stop
 @section('content')
 
 <div class="col-6">
         <h4 class="jumbotron-heading">Encrypt</h4>
-        <form class="col-12" method="POST" action="{{route('symmetric.encrypt')}}">
+        <form class="col-12" method="POST" action="{{route('assymmetric.encrypt')}}">
             @csrf
             <div class="form-group">
                     <select class="form-control" id="userEncrypt" name="userEncrypt">
@@ -35,7 +35,7 @@
 <div class="col-6">
         <h4 class="jumbotron-heading">Decrypt</h4>
 
-        <form class="col-12" method="POST" action="{{ route('symmetric.decrypt') }}">
+        <form class="col-12" method="POST" action="{{ route('assymmetric.decrypt') }}">
                 @csrf
                 <div class="form-group">
                         <select class="form-control" id="userDecrypt" name="userDecrypt">
@@ -66,22 +66,21 @@ highlight_string('
 /**
 * Encrypt
 */
-$rsa = new RSA();
-//Public key
-$rsa->loadKey(\file_get_contents("/path/to/key/file.pub"));
-$rsa->setEncryptionMode(RSA::ENCRYPTION_PKCS1);
-$ciphertext = $rsa->encrypt($text);
-return base64_encode($ciphertext);
+$cipher = new AES(AES::MODE_CBC);
+$cipher->setKeyLength(256);
+$cipher->setIV(Random::string($cipher->getBlockLength() >> 3));
+$cipher->setKey(/path/to/keys/file.key);
+return base64_encode($cipher->encrypt($text));
+
 
 /**
-* Decrypt
+* Dencrypt
 */
-$rsa = new RSA();
-//private key
-$rsa->loadKey(\file_get_contents("/path/to/key/file.key"));
-$rsa->setEncryptionMode(RSA::ENCRYPTION_PKCS1);
-
-return $rsa->decrypt(\base64_decode($text));')
+$cipher = new AES(AES::MODE_CBC);
+$cipher->setKeyLength(256);
+$cipher->setIV(Random::string($cipher->getBlockLength() >> 3));
+$cipher->setKey(/path/to/keys/file.key);
+return base64_encode($cipher->encrypt($text));')
 
 @endphp
 @stop

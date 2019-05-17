@@ -29,3 +29,11 @@ Route::group(['prefix' => 'symmetric'], function () {
     Route::get('/decrypt', 'SyncController@index')->name('symmetric.decryptIndex');
     Route::get('/encrypt', 'SyncController@index')->name('symmetric.encriptIndex');
 });
+
+Route::group(['prefix' => 'assymmetric'], function () {
+    Route::get('/', 'AsyncController@index')->name('assymmetric.index');
+    Route::post('/encrypt', 'AsyncController@encrypt')->name('assymmetric.encrypt');
+    Route::post('/decrypt', 'AsyncController@decrypt')->name('assymmetric.decrypt');
+    Route::get('/decrypt', 'AsyncController@index')->name('assymmetric.decryptIndex');
+    Route::get('/encrypt', 'AsyncController@index')->name('assymmetric.encriptIndex');
+});

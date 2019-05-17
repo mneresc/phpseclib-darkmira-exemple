@@ -3,7 +3,6 @@
 namespace App\Http\Services;
 
 use phpseclib\Crypt\RSA;
-use Illuminate\Support\Facades\Storage;
 
 class KeyService
 {
@@ -38,8 +37,8 @@ class KeyService
          *  Crio uma chave com o formato PKS8.
          */
         $rsa = new RSA();
-        $rsa->setPrivateKeyFormat(RSA::PRIVATE_FORMAT_PKCS8);
-        $rsa->setPublicKeyFormat(RSA::PUBLIC_FORMAT_PKCS8);
+        $rsa->setPrivateKeyFormat(RSA::PRIVATE_FORMAT_PKCS1);
+        $rsa->setPublicKeyFormat(RSA::PRIVATE_FORMAT_PKCS1);
         $rsa->setMGFHash('sha512');
         $keysCertificadoGerado = $rsa->createKey(2048);
 
@@ -97,7 +96,7 @@ class KeyService
     {
         $path = storage_path('keys');
         if (\is_dir($path)) {
-            $directory = Storage::disk('local')->allDirectories($path);
+            $directory = glob($path.'/*', GLOB_ONLYDIR);
             $usersPaths = [];
             foreach ($directory as $userPath) {
                 $pathSlices = explode('/', $userPath);
@@ -119,6 +118,6 @@ class KeyService
         $fp = fopen($path, 'wb');
         fwrite($fp, $content);
         fclose($fp);
-        \chmod($path, 0750);
+        \chmod($path, 0755);
     }
 }
